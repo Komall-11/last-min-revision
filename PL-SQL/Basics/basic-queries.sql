@@ -1,0 +1,40 @@
+DECLARE
+BEGIN
+    INSERT INTO MY_EMPLOYEE
+    VALUES (104, 'Neha', 20, 45000);
+
+    DBMS_OUTPUT.PUT_LINE('Employee inserted');
+END;
+/
+
+DECLARE
+BEGIN
+    DELETE FROM MY_EMPLOYEE WHERE EMPNO=104;
+    DBMS_OUTPUT.PUT_LINE('Employee Deleted');
+END;
+/
+
+
+DECLARE
+    v_row MY_EMPLOYEE%ROWTYPE;
+BEGIN
+    SELECT * INTO v_row
+    FROM MY_EMPLOYEE
+    WHERE EMPNO=102;
+    
+    DBMS_OUTPUT.PUT_LINE(v_row.ENAME || ' '|| v_row.SAL);
+END;
+/
+
+
+DECLARE
+    v_name MY_EMPLOYEE.ENAME%TYPE;
+    v_sal MY_EMPLOYEE.SAL%TYPE;
+BEGIN
+    SELECT ENAME,SAL INTO v_name,v_sal
+    FROM MY_EMPLOYEE
+    WHERE EMPNO=103;
+
+    DBMS_OUTPUT.PUT_LINE(v_name || ' ' || v_sal);
+END;
+/
