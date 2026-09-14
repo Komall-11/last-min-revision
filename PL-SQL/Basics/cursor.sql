@@ -1,0 +1,117 @@
+CREATE TABLE MY_EMPLOYEE (
+    EMPNO NUMBER(4),
+    ENAME VARCHAR2(50),
+    DEPTNO NUMBER(2),
+    SAL NUMBER(10,2)
+);
+
+INSERT INTO MY_EMPLOYEE VALUES (101, 'Rahul', 10, 30000);
+INSERT INTO MY_EMPLOYEE VALUES (102, 'Priya', 20, 40000);
+INSERT INTO MY_EMPLOYEE VALUES (103, 'Aman', 30, 35000);
+
+
+DECLARE
+CURSOR c1 
+IS SELECT ENAME,
+SAL
+FROM MY_EMPLOYEE;
+var_name MY_EMPLOYEE.ENAME%TYPE;
+var_sal MY_EMPLOYEE.SAL%TYPE;
+BEGIN
+  OPEN c1;
+  LOOP
+    FETCH c1 INTO var_name, var_sal;
+    EXIT WHEN c1%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE(var_name|| ' '||var_sal);
+  END LOOP;
+  CLOSE c1;
+END;
+/
+
+DECLARE
+CURSOR c1 
+IS SELECT *
+FROM MY_EMPLOYEE;
+var_info MY_EMPLOYEE%ROWTYPE;
+BEGIN
+  OPEN c1;
+  LOOP
+    FETCH c1 INTO var_info;
+    EXIT WHEN c1%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE(var_info.EMPNO||' '||var_info.ENAME|| ' '||var_info.DEPTNO ||' '|| var_info.SAL);
+    DBMS_OUTPUT.PUT_LINE(c1%ROWCOUNT);
+  END LOOP;
+  CLOSE c1;
+END;
+/
+
+
+DECLARE
+CURSOR c2 IS
+SELECT * FROM MY_EMPLOYEE;
+v_info MY_EMPLOYEE%ROWTYPE;
+BEGIN 
+  OPEN c2;
+  LOOP
+    FETCH c2 INTO v_info;
+    IF c2%FOUND THEN
+      DBMS_OUTPUT.PUT_LINE(v_info.ENAME);
+  ELSE
+    EXIT;
+  END IF;
+END LOOP;
+CLOSE c2;
+END;
+/
+
+
+DECLARE
+    CURSOR c1 IS
+        SELECT *
+        FROM MY_EMPLOYEE;
+BEGIN
+    IF c1%ISOPEN THEN
+        DBMS_OUTPUT.PUT_LINE('Cursor is open');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Cursor is closed');
+    END IF;
+
+    OPEN c1;
+
+    IF c1%ISOPEN THEN
+        DBMS_OUTPUT.PUT_LINE('Cursor is open');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Cursor is closed');
+    END IF;
+
+    CLOSE c1;
+
+    IF c1%ISOPEN THEN
+        DBMS_OUTPUT.PUT_LINE('Cursor is open');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Cursor is closed');
+    END IF;
+END;
+/
+
+
+
+
+DECLARE
+CURSOR c2(dept_id NUMBER DEFAULT 20) IS 
+SELECT ENAME,SAL FROM MY_EMPLOYEE
+WHERE DEPTNO=dept_id;
+
+v_name MY_EMPLOYEE.ENAME%TYPE;
+v_sal MY_EMPLOYEE.SAL%TYPE;
+
+BEGIN
+  OPEN c2;
+  LOOP 
+    FETCH c2 INTO v_name, v_sal;
+    EXIT WHEN c2%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE(v_name|| ' ' || v_sal);
+  END LOOP;
+  CLOSE c2;
+END;
+/
