@@ -1,0 +1,98 @@
+CREATE TABLE MY_EMPLOYEE (
+    EMPNO NUMBER(4),
+    ENAME VARCHAR2(50),
+    DEPTNO NUMBER(2),
+    SAL NUMBER(10,2)
+);
+
+INSERT INTO MY_EMPLOYEE VALUES (101, 'Rahul', 10, 30000);
+INSERT INTO MY_EMPLOYEE VALUES (102, 'Priya', 20, 40000);
+INSERT INTO MY_EMPLOYEE VALUES (103, 'Aman', 30, 35000);
+
+
+CREATE OR REPLACE PROCEDURE display_emp(
+  emp_no IN NUMBER,
+  emp_sal OUT NUMBER
+)
+IS
+BEGIN
+  SELECT SAL INTO
+  emp_sal
+  FROM MY_EMPLOYEE
+  WHERE EMPNO=emp_no;
+  DBMS_OUTPUT.PUT_LINE(emp_sal);
+END;
+/
+
+DECLARE
+v_sal MY_EMPLOYEE.SAL%TYPE;
+BEGIN
+  display_emp(101,v_sal);
+END;
+/
+
+
+CREATE OR REPLACE PROCEDURE increase_sal(
+  emp_sal IN OUT NUMBER
+)
+IS
+BEGIN
+  emp_sal:= emp_sal+ emp_sal*0.1;
+  DBMS_OUTPUT.PUT_LINE(emp_sal);
+END;
+/
+
+
+DECLARE
+new_sal MY_EMPLOYEE.SAL%TYPE := 30000;
+BEGIN
+  increase_sal(new_sal);
+END;
+/
+
+CREATE OR REPLACE PROCEDURE update_sal(
+  emp_no IN NUMBER,
+  percent IN NUMBER
+)
+IS
+v_sal MY_EMPLOYEE.SAL%TYPE;
+BEGIN
+  SELECT SAL INTO v_sal
+  FROM MY_EMPLOYEE
+  WHERE EMPNO=emp_no;
+
+  v_sal:= v_sal+v_sal*(percent/100);
+
+  UPDATE MY_EMPLOYEE
+  SET SAL=v_sal WHERE EMPNO=emp_no;
+  DBMS_OUTPUT.PUT_LINE(v_sal);
+END;
+/
+
+EXEC update_sal(101, 10);
+
+
+CREATE OR REPLACE PROCEDURE update_sal2(
+  emp_no IN NUMBER,
+  percent IN NUMBER
+)
+IS
+v_sal MY_EMPLOYEE.SAL%TYPE;
+BEGIN
+  SELECT SAL INTO v_sal
+  FROM MY_EMPLOYEE
+  WHERE EMPNO=emp_no;
+
+  v_sal:= v_sal+v_sal*(percent/100);
+
+  UPDATE MY_EMPLOYEE
+  SET SAL=v_sal WHERE EMPNO=emp_no;
+  DBMS_OUTPUT.PUT_LINE(v_sal);
+
+EXCEPTION 
+    WHEN NO_DATA_FOUND THEN
+  DBMS_OUTPUT.PUT_LINE('Employee not found');
+END;
+/
+
+EXEC update_sal2(104, 10);
